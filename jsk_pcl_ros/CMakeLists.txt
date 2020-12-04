@@ -264,6 +264,8 @@ jsk_pcl_nodelet_upstream(jsk_pcl_ros_utils "jsk_pcl/DepthImageError" "depth_imag
 #   "jsk_pcl/OrganizePointCloud" "organize_pointcloud")
 jsk_pcl_nodelet(src/depth_image_creator_nodelet.cpp
   "jsk_pcl/DepthImageCreator" "depth_image_creator")
+jsk_pcl_nodelet(src/frustum_culling_nodelet.cpp
+  "jsk_pcl/FrustumCulling" "frustum_culling")
 jsk_pcl_nodelet_upstream(jsk_pcl_ros_utils "jsk_pcl/PolygonArrayWrapper" "polygon_array_wrapper")
 jsk_pcl_nodelet_upstream(jsk_pcl_ros_utils "jsk_pcl/PolygonArrayUnwrapper" "polygon_array_unwrapper")
 jsk_pcl_nodelet(src/border_estimator_nodelet.cpp

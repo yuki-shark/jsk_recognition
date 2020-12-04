@@ -91,7 +91,7 @@
          type="jsk_pcl_ros::ExtractIndices"
          base_class_type="nodelet::Nodelet">
     Extract point cloud with point indices
-  </class>  
+  </class>
   <class name="jsk_pcl/ROIClipper"
          type="jsk_pcl_ros::ROIClipper"
          base_class_type="nodelet::Nodelet">
@@ -286,7 +286,7 @@
 	Nodelet to auto segment using supervoxel and integer label the unknown voxel using convexity
       </description>
   </class>
-  
+
   <!-- <class name="jsk_pcl/NodeletPointCloudThrottle" type="NodeletPointCloudThrottle" -->
   <!--        base_class_type="nodelet::Nodelet"> -->
   <!--   <description> -->
@@ -356,6 +356,13 @@
          base_class_type="nodelet::Nodelet">
     <description>
       DepthImageCreator take pointcloud and camera info to generate pointlocud.
+    </description>
+  </class>
+
+  <class name="jsk_pcl/FrustumCulling" type="jsk_pcl_ros::FrustumCulling"
+         base_class_type="nodelet::Nodelet">
+    <description>
+      FrustumCulling take pointcloud and camera info to generate culled pointlocud.
     </description>
   </class>
 
