@@ -85,6 +85,8 @@ namespace jsk_pcl_ros
     tf::TransformListener* tf_listener_;
     double near_plane_distance_;
     double far_plane_distance_;
+    double custom_fov_h_;
+    double custom_fov_v_;
     typedef pcl::PointXYZ Point;
     typedef pcl::PointCloud< Point > PointCloud;
 

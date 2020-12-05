@@ -68,6 +68,8 @@ void jsk_pcl_ros::FrustumCulling::onInit () {
 
   pnh_->param("near_plane_distance", near_plane_distance_, 0.0001);
   pnh_->param("far_plane_distance" , far_plane_distance_, 100.0);
+  pnh_->param("custom_fov_h" , custom_fov_h_, -1.0);
+  pnh_->param("custom_fov_v" , custom_fov_v_, -1.0);
   pnh_->param("camera_link_frame" , camera_link_frame_, std::string("camera_link"));
 
   pub_cloud_ = advertise<PointCloud>(*pnh_, "output_cloud", max_pub_queue_size_);
@@ -148,11 +150,14 @@ void jsk_pcl_ros::FrustumCulling::publish_points(const sensor_msgs::CameraInfoCo
   float fy = info->P[5];
   float cy = info->P[6];
 
-  float fov_h = (2 * atan2(0.5 * width,  fx)) / M_PI * 180;
-  float fov_v = (2 * atan2(0.5 * height, fy)) / M_PI * 180;
+  double fov_h = (2 * atan2(0.5 * width,  fx)) / M_PI * 180;
+  double fov_v = (2 * atan2(0.5 * height, fy)) / M_PI * 180;
 
-  ROS_DEBUG("Horizontal FOV: %f", fov_h);
-  ROS_DEBUG("Vertical FOV:   %f", fov_v);
+  if (custom_fov_h_ > 0) fov_h = custom_fov_h_;
+  if (custom_fov_v_ > 0) fov_v = custom_fov_v_;
+
+  ROS_DEBUG("Horizontal FOV: %.2lf", fov_h);
+  ROS_DEBUG("Vertical FOV:   %.2lf", fov_v);
 
   Eigen::Affine3f sensorPose;
   {
