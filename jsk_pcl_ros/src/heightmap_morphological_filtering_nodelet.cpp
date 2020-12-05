@@ -175,6 +175,84 @@ namespace jsk_pcl_ros
         }
       }
     }
+    else if (smooth_method_ == "max_distance") {
+      for (size_t j = 0; j < input.rows; j++) {
+        for (size_t i = 0; i < input.cols; i++) {
+          float v = input.at<cv::Vec2f>(j, i)[0];
+          if (std::isnan(v) || v == -FLT_MAX) { // Need to filter
+            Accumulator height_acc;
+            Accumulator dist_acc;
+            // store valid values around the target point
+            for (int jj = - mask_size_; jj <= mask_size_; jj++) {
+              int target_j = j + jj;
+              if (target_j >= 0 && target_j < input.rows) {
+                for (int ii = - mask_size_; ii <= mask_size_; ii++) {
+                  int target_i = i + ii;
+                  if (target_i >= 0 && target_i < input.cols) {
+                    int len = std::abs(jj) + std::abs(ii);
+                    if (len <= mask_size_) {
+                      float vv = input.at<cv::Vec2f>(target_j, target_i)[0];
+                      if (!std::isnan(vv) && vv != -FLT_MAX) {
+                        height_acc(vv);
+                        dist_acc(len);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            // if valid values exist, add new value to the target point as interpolation
+            if (boost::accumulators::count(height_acc) != 0) {
+              float newv = boost::accumulators::max(height_acc);
+              float variance = boost::accumulators::variance(height_acc);
+              if (variance < max_variance_) {
+                filtered_image.at<cv::Vec2f>(j, i)[0] = newv;
+                filtered_image.at<cv::Vec2f>(j, i)[1] = (float)(1.0/(1.0 + boost::accumulators::mean(dist_acc)));
+              }
+            }
+          }
+        }
+      }
+    }
+    else if (smooth_method_ == "min_distance") {
+      for (size_t j = 0; j < input.rows; j++) {
+        for (size_t i = 0; i < input.cols; i++) {
+          float v = input.at<cv::Vec2f>(j, i)[0];
+          if (std::isnan(v) || v == -FLT_MAX) { // Need to filter
+            Accumulator height_acc;
+            Accumulator dist_acc;
+            // store valid values around the target point
+            for (int jj = - mask_size_; jj <= mask_size_; jj++) {
+              int target_j = j + jj;
+              if (target_j >= 0 && target_j < input.rows) {
+                for (int ii = - mask_size_; ii <= mask_size_; ii++) {
+                  int target_i = i + ii;
+                  if (target_i >= 0 && target_i < input.cols) {
+                    int len = std::abs(jj) + std::abs(ii);
+                    if (len <= mask_size_) {
+                      float vv = input.at<cv::Vec2f>(target_j, target_i)[0];
+                      if (!std::isnan(vv) && vv != -FLT_MAX) {
+                        height_acc(vv);
+                        dist_acc(len);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            // if valid values exist, add new value to the target point as interpolation
+            if (boost::accumulators::count(height_acc) != 0) {
+              float newv = boost::accumulators::min(height_acc);
+              float variance = boost::accumulators::variance(height_acc);
+              if (variance < max_variance_) {
+                filtered_image.at<cv::Vec2f>(j, i)[0] = newv;
+                filtered_image.at<cv::Vec2f>(j, i)[1] = (float)(1.0/(1.0 + boost::accumulators::mean(dist_acc)));
+              }
+            }
+          }
+        }
+      }
+    }
 
     if (use_bilateral_) {
       std::vector<cv::Mat> fimages;

@@ -44,6 +44,8 @@
 #include <dynamic_reconfigure/server.h>
 #include <jsk_recognition_msgs/HeightmapConfig.h>
 #include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/max.hpp>
+#include <boost/accumulators/statistics/min.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
 #include <boost/accumulators/statistics/variance.hpp>
 #include <boost/accumulators/statistics/count.hpp>
@@ -61,6 +63,8 @@ namespace jsk_pcl_ros
       boost::accumulators::stats<
         boost::accumulators::tag::variance,
         boost::accumulators::tag::count,
+        boost::accumulators::tag::max,
+        boost::accumulators::tag::min,
         boost::accumulators::tag::mean> >  Accumulator;
     HeightmapMorphologicalFiltering(): DiagnosticNodelet("HeightmapMorphologicalFiltering") {}
   protected:
