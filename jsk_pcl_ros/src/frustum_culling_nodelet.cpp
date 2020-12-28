@@ -176,7 +176,7 @@ void jsk_pcl_ros::FrustumCulling::publish_points(const sensor_msgs::CameraInfoCo
       tf_listener_->waitForTransform(pcloud2_ptr->header.frame_id,
                                      camera_link_frame_,
                                      info->header.stamp,
-                                     ros::Duration(0.001));
+                                     ros::Duration(1.0));
       tf_listener_->lookupTransform(pcloud2_ptr->header.frame_id,
                                     camera_link_frame_,
                                     info->header.stamp, transform);
