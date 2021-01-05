@@ -135,6 +135,7 @@ generate_dynamic_reconfigure_options(
   cfg/PrimitiveShapeClassifier.cfg
   cfg/Kinfu.cfg
   cfg/PointcloudScreenpoint.cfg
+  cfg/FrustumCulling.cfg
   )
 
 find_package(OpenCV REQUIRED core imgproc)

@@ -74,6 +74,12 @@ void jsk_pcl_ros::FrustumCulling::onInit () {
 
   pub_cloud_ = advertise<PointCloud>(*pnh_, "output_cloud", max_pub_queue_size_);
 
+  srv_ = boost::make_shared <dynamic_reconfigure::Server<Config> > (*pnh_);
+  dynamic_reconfigure::Server<Config>::CallbackType f =
+    boost::bind (
+      &FrustumCulling::configCallback, this, _1, _2);
+  srv_->setCallback (f);
+
   onInitPostProcess();
 }
 
@@ -108,6 +114,15 @@ void jsk_pcl_ros::FrustumCulling::unsubscribe() {
     sub_info_.unsubscribe();
     sub_cloud_.unsubscribe();
   }
+}
+
+void jsk_pcl_ros::FrustumCulling::configCallback(Config &config, uint32_t level)
+{
+  boost::mutex::scoped_lock lock(mutex_);
+  near_plane_distance_ = config.near_plane_distance;
+  far_plane_distance_  = config.far_plane_distance;
+  custom_fov_h_        = config.custom_fov_h;
+  custom_fov_v_        = config.custom_fov_v;
 }
 
 void jsk_pcl_ros::FrustumCulling::callback_sync(const sensor_msgs::CameraInfoConstPtr& info,

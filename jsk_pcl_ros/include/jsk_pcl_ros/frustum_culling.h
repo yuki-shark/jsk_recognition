@@ -41,6 +41,7 @@
 
 #include <pluginlib/class_list_macros.h>
 #include <dynamic_reconfigure/server.h>
+#include <jsk_pcl_ros/FrustumCullingConfig.h>
 
 #if ( PCL_MAJOR_VERSION >= 1 && PCL_MINOR_VERSION >= 5 )
 #include <pcl/common/transforms.h>
@@ -67,6 +68,9 @@ namespace jsk_pcl_ros
     ros::Subscriber sub_as_info_;
     ros::Subscriber sub_as_cloud_;
     ros::Publisher pub_cloud_;
+    typedef jsk_pcl_ros::FrustumCullingConfig Config;
+    boost::shared_ptr <dynamic_reconfigure::Server<Config> > srv_;
+    boost::mutex mutex_;
 
     sensor_msgs::PointCloud2ConstPtr points_ptr_;
 
@@ -104,6 +108,7 @@ namespace jsk_pcl_ros
 
     void subscribe();
     void unsubscribe();
+    void configCallback (Config &config, uint32_t level);
   public:
   };
 }
